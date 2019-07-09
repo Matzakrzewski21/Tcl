@@ -1,0 +1,103 @@
+#!/usr/bin/env tclsh
+
+puts "
+                Hello"
+puts "
+        What do You want to do?"
+puts "
+Press 1 - If you want display current date and time"
+puts "
+Press 2 - If you want display information about your current folder"
+puts "
+Press 3 - If you want display content of the file and sort alphabetically"
+puts "
+Press 4 - If you want add some words to end of file"
+puts "
+Press 5 - If you want find specified word in file"
+puts "
+Press 6 - If you want delete file"
+puts "
+Press 7 - If you want stop program"
+puts "
+Choose one of options: "
+puts "
+Your choice: [set option [gets stdin]]"
+puts "
+"
+
+#1
+set systemTime [clock seconds]
+
+#3
+#set argument $argv
+#set input [read [open $argument]]
+#set readed $input
+#set readedsorted [lsort -ascii $readed]
+
+#7
+set default 7
+
+switch -glob -- $option {
+    "1" {
+        puts "
+        The time is: [clock format $systemTime -format %H:%M:%S]"
+        puts "
+        The date is: [clock format $systemTime -format %D]"
+        puts "
+        "
+    }
+    "2" {
+        puts " 
+        Localization of current working directory
+        [exec pwd ]"
+        puts "
+        Content of current working directory
+        [exec ls -lah]"
+    }
+    "3" {
+        set argument $argv
+        set input [read [open $argument]]
+        set readed $input
+        set readedsorted [lsort -ascii $readed]        
+        puts "
+        Content of entered file:"
+        puts $readed
+        puts "
+        Content of entered file_sorted alphabetically"
+        puts $readedsorted"
+    }
+    "4" {
+        #file copy $argument ./plik_old.txt
+        puts "Enter new words and add to end of file: "
+        set ofor_add [open $argument a]
+        set newtext [gets stdin]
+        foreach different_content $newtext {
+            puts $ofor_add $different_content
+        }
+        close $ofor_add
+    }
+    "5" {
+        puts "Enter specific number(s) and check that this number(s) exist in file: "
+        set search [split $readed ""]
+        set searchword [lsearch -all -nocase $search [gets stdin]]
+        set wcsearchword [llength $searchword] 
+        puts "This word exist $wcsearchword time(s)"
+    }
+    "6" {
+        puts "
+                !!!!!!!!!!Warning!!!!!!!!!!"
+        puts "
+        Do you really want delete yout text file?"
+        puts "
+        If you want abort this procedure press ctrl+c on keybord"
+        puts "
+        Or click any button_to continue"
+        set check [gets stdin]
+        file delete -force $argv
+    }
+    default {
+        puts "
+        No options selected"
+    }
+}
+
